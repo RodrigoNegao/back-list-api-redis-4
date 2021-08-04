@@ -1,0 +1,8 @@
+POST http://localhost:8080/message HTTP/1.1
+content-type: application/json
+ 
+ {
+    "title": "Titulo kinho8",
+    "detail": "Detalhes kinho8",
+    "id_user": 5
+}

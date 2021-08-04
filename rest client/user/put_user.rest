@@ -1,0 +1,10 @@
+PUT  http://localhost:8080/project/8b0d8482-1852-4268-a1eb-13705dd55278  HTTP/1.1
+content-type: application/json
+
+ {    
+    "name": "Project 3",
+    "description": "13 editado as vera",
+    "startDate": "{{$datetime iso8601}}",
+    "endDate": "{{$datetime iso8601}}",
+    "userUid": "5e61398c-fbec-4a5f-a164-a7b6e566a414"
+  }
