@@ -31,7 +31,7 @@ export default class UserRoutes {
 
     routes.post(
       "/login",
-      //middlewareAdapter(new UserMiddleware()),
+      middlewareAdapter(new UserMiddleware()),
       routerMvcAdapter(makeController(), EMvc.SHOW)
     );
     //TODO'/categorias', colocar Middleware

@@ -1,7 +1,8 @@
-PUT  http://localhost:8080/message/  HTTP/1.1
+PUT  http://localhost:8080/message/19  HTTP/1.1
 content-type: application/json
 
 {
     "title": "Titulo kinho13",
-    "detail": "Detalhes kinho10"
+    "detail": "Detalhes kinho10",
+    "id_user": 5
 }

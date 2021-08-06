@@ -11,6 +11,11 @@ export const notFound = (error: Error): HttpResponse => ({
   body: error,
 });
 
+export const validatorField = (body: any): HttpResponse => ({
+  statusCode: 400,
+  body,
+});
+
 export const ok = (body: any): HttpResponse => ({
   statusCode: 200,
   body,

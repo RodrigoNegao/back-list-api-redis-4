@@ -25,7 +25,7 @@ export default class TodoListRoutes {
     );
     routes.post("/message", routerMvcAdapter(makeController(), EMvc.STORE));
     routes.put(
-      "/message/:id_user_string/:uid_string",
+      "/message/:uid_string",
       routerMvcAdapter(makeController(), EMvc.UPDATE)
     );
     routes.delete(
