@@ -1,3 +1,4 @@
+import cors from "cors";
 import express, { Request, Response, Router } from "express";
 import TodoListRoutes from "../../features/todolist/presentation/routes";
 import UserRoutes from "../../features/user/presentation/routes";
@@ -19,6 +20,7 @@ export default class App {
   }
 
   private middlewares(): void {
+    this.#express.use(cors());
     this.#express.use(express.json());
     this.#express.use(express.urlencoded({ extended: false }));
   }

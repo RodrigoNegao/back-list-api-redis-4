@@ -34,11 +34,8 @@ export default class UserRoutes {
       middlewareAdapter(new UserMiddleware()),
       routerMvcAdapter(makeController(), EMvc.SHOW)
     );
-    //TODO'/categorias', colocar Middleware
+
     routes.post("/signin", routerMvcAdapter(makeController(), EMvc.STORE));
-    // TODO colocar Middleware
-    //routes.put('/user/:id', userController.update);
-    //routes.delete('/user/:id', userController.delete);
 
     return routes;
   }

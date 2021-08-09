@@ -1,6 +1,6 @@
 import express from "express";
-import { TodoList } from "../../../core/data/database/entities/TodoList";
-import { User } from "../../../core/data/database/entities/User";
+import { TodoListEntity } from "../../../../core/infra";
+//import { TodoList } from "../../../core/data/database/entities/TodoList";
 
 async function validateUid(
   req: express.Request,
@@ -10,12 +10,12 @@ async function validateUid(
   //console.log("valid Name Middleware");
   const { uid } = req.params;
 
-    const exist = await TodoList.findOne(uid);
-    if (!exist) {
-      return res.status(404).json({
-        msg: "Item não encontrado",
-      });
-    }
+  const exist = await TodoListEntity.findOne(uid);
+  if (!exist) {
+    return res.status(404).json({
+      msg: "Item não encontrado",
+    });
+  }
 
   next();
 }
