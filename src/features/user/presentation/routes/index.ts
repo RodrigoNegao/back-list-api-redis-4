@@ -8,16 +8,11 @@ import {
 } from "../../../../core/presentation";
 import UserRepository from "../../infra/repositories/user.repository";
 import UserController from "../controllers/user.controller";
-import { UserMiddleware } from "../middlewares";
 import {
-  validateExistPassword,
-  validatePassword,
-} from "../middlewares/validatePassword";
-import {
-  validateExistUser,
-  validateNotExistUser,
-  validateUser,
-} from "../middlewares/validateUser";
+  PasswordMiddleware,
+  UserFieldMiddleware,
+  UserMiddleware,
+} from "../middlewares";
 
 const makeController = (): MvcController => {
   const repository = new UserRepository();
@@ -31,7 +26,11 @@ export default class UserRoutes {
 
     routes.post(
       "/login",
-      middlewareAdapter(new UserMiddleware()),
+      [
+        middlewareAdapter(new UserFieldMiddleware()),
+        middlewareAdapter(new PasswordMiddleware()),
+        middlewareAdapter(new UserMiddleware()),
+      ],
       routerMvcAdapter(makeController(), EMvc.SHOW)
     );
 

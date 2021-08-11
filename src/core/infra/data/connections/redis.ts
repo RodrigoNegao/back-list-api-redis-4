@@ -19,7 +19,7 @@ export class Redis {
     if (!Redis.#connection) {
       //teste para localhost
       //Redis.#connection = new IORedis(process.env.REDIS_URL);
-      const port = parseInt(process.env.REDIS_PORT!);
+      const port = parseInt(process.env.REDIS_PORT ?? "6379");
       Redis.#connection = new IORedis(port, process.env.REDIS_HOST, {
         password: process.env.REDIS_PASSWORD,
       });
