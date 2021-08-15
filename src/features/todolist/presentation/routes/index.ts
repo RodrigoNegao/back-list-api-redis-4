@@ -7,7 +7,7 @@ import {
 } from "../../../../core/presentation";
 import TodoListRepository from "../../infra/repositories/todoList.repository";
 import TodoListController from "../controllers/todoList.controller";
-import { validateUid } from "../middlewares/validateUid";
+import { UidMiddleware } from "../middlewares/validateUid.middleware";
 
 const makeController = (): MvcController => {
   const repository = new TodoListRepository();

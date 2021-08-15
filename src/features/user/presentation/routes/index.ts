@@ -26,11 +26,12 @@ export default class UserRoutes {
 
     routes.post(
       "/login",
-      [
-        middlewareAdapter(new UserFieldMiddleware()),
-        middlewareAdapter(new PasswordMiddleware()),
-        middlewareAdapter(new UserMiddleware()),
-      ],
+      middlewareAdapter(new UserMiddleware()),
+      // [
+      //   middlewareAdapter(new UserFieldMiddleware()),
+      //   middlewareAdapter(new PasswordMiddleware()),
+      //   middlewareAdapter(new UserMiddleware()),
+      // ],
       routerMvcAdapter(makeController(), EMvc.SHOW)
     );
 

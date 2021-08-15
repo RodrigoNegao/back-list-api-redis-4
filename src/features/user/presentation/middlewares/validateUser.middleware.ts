@@ -20,6 +20,6 @@ export class UserFieldMiddleware {
         msg: "O nome deve conter no minimo 3 caracteres.",
       });
     }
-    return ok({});
+    return ok({ msg: "passa por aqui" });
   }
 }
