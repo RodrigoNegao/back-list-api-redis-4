@@ -9,7 +9,7 @@ import {
 import UserRoutes from "../../../../../features/user/presentation/routes/index";
 import { UserEntity } from "./index";
 
-@Entity({ name: "todo_list", schema: "lista1" })
+@Entity({ name: "todo_list" }) //, schema: "lista1"
 export class TodoListEntity extends BaseEntity {
   @PrimaryGeneratedColumn({ name: "id" })
   uid?: number;

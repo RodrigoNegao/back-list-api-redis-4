@@ -11,7 +11,7 @@ const makeUserDB = async (): Promise<UserEntity> =>
   }).save();
 
 const makeCreateParams = async (): Promise<User> => {
-  const user = await makeUserDB();
+  //const user = await makeUserDB();
   return {
     user: "any_user",
     password: "any_password",
@@ -29,7 +29,7 @@ const makeCreateParams = async (): Promise<User> => {
 // };
 
 const makeUsersDB = async (): Promise<UserEntity[]> => {
-  const user = await makeUserDB();
+  //const user = await makeUserDB();
 
   const p1 = await UserEntity.create({
     user: "any_name",
