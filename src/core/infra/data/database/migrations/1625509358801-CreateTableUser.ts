@@ -8,7 +8,7 @@ export class CreateTableUser1625509358801 implements MigrationInterface {
         columns: [
           {
             name: "uid",
-            type: "serial",
+            type: "serial", // não funciona serial no sqlite JEST
             isPrimary: true,
             isNullable: false,
           },

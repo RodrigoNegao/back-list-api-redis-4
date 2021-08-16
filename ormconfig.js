@@ -2,7 +2,7 @@ require("dotenv").config();
 
 let config = {};
 
-process.env.NODE_ENV = null;
+//process.env.NODE_ENV = null;
 
 if (process.env.NODE_ENV.toString() === "test") {
   config = {
