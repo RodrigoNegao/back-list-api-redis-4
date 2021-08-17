@@ -12,6 +12,7 @@ export default class Database {
     return Database.#connection;
   }
 
+  //https://github.com/typeorm/typeorm/blob/master/docs/connection-options.md
   public async openConnection(): Promise<void> {
     if (!Database.#connection) {
       Database.#connection = await createConnection();

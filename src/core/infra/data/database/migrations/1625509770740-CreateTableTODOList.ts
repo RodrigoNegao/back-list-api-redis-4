@@ -13,7 +13,7 @@ export class CreateTableTODOList1625509770740 implements MigrationInterface {
         columns: [
           {
             name: "id",
-            type: "serial",
+            type: "varchar", //serial não funciona serial no sqlite JEST
             isPrimary: true,
             isNullable: false,
           },
@@ -30,7 +30,7 @@ export class CreateTableTODOList1625509770740 implements MigrationInterface {
           },
           {
             name: "id_user",
-            type: "int",
+            type: "varchar",
           },
         ],
       })

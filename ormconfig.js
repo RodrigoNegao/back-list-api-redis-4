@@ -17,13 +17,21 @@ if (process.env.NODE_ENV.toString() === "test") {
     url: process.env.DATABASE_URL,
     synchronize: false,
     logging: false,
+    schema: "lista1", //TODO fazer um if caso não exista
     extra: {
       ssl: {
         rejectUnauthorized: false,
       },
     },
-    entities: ["dist/core/infra/data/database/entities/**/*"],
-    migrations: ["dist/core/infra/data/database/migrations/**/*"],
+    // TODO dist para produção
+    entities: [
+      "dist/core/infra/data/database/entities/**/*" ||
+        "src/core/infra/data/database/entities/**/*",
+    ],
+    migrations: [
+      "dist/core/infra/data/database/migrations/**/*" ||
+        "src/core/infra/data/database/migrations/**/*",
+    ],
     cli: {
       entitiesDir: "src/core/infra/data/database/entities",
       migrationsDir: "src/core/infra/data/database/migrations",

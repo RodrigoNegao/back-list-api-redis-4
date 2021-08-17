@@ -1,0 +1,6 @@
+Readme.md
+jest*
+/tests
+/rest client
+/coverage
+testdb.db

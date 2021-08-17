@@ -8,11 +8,12 @@ import {
 } from "typeorm";
 import UserRoutes from "../../../../../features/user/presentation/routes/index";
 import { UserEntity } from "./index";
+import { v4 as uuid } from "uuid";
 
 @Entity({ name: "todo_list" }) //, schema: "lista1"
 export class TodoListEntity extends BaseEntity {
   @PrimaryGeneratedColumn({ name: "id" })
-  uid?: number;
+  uid?: string;
 
   @Column({ name: "title" })
   title: string;
@@ -31,7 +32,7 @@ export class TodoListEntity extends BaseEntity {
     super();
     this.title = title;
     this.detail = detail;
-    this.uid = uid;
+    this.uid = uuid();
     this.id_user = id_user;
   }
 }
