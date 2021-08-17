@@ -24,12 +24,12 @@ export default class TodoListController implements MvcController {
   }
 
   public async index(request: HttpRequest) {
-    const { id_user_string } = request.params;
+    const { id_user } = request.params;
     try {
       const cache = await this.#cache.get("lodoList:all");
 
       //console.log("string>>>", id_user_string);
-      const id_user = parseInt(id_user_string);
+      //const id_user = parseInt(id_user_string);
       // console.log("number>>>", id_user);
 
       // valido se existe cache
@@ -55,10 +55,10 @@ export default class TodoListController implements MvcController {
   }
 
   public async show(request: HttpRequest) {
-    const { uid_string, id_user_string } = request.params;
+    const { uid, id_user } = request.params;
 
-    const id_user = parseInt(id_user_string);
-    const uid = parseInt(uid_string);
+    //const id_user = parseInt(id_user_string);
+    //const uid = parseInt(uid_string);
 
     try {
       // consulto o cache
@@ -85,11 +85,11 @@ export default class TodoListController implements MvcController {
   }
 
   async delete(request: HttpRequest): Promise<HttpResponse> {
-    const { uid_string } = request.params;
+    const { uid } = request.params;
 
     //id_user_string
     //const id_user = parseInt(id_user_string);
-    const uid = parseInt(uid_string);
+    //const uid = parseInt(uid_string);
     //id_user
     try {
       const result = await this.#repository.delete(uid);
@@ -100,12 +100,12 @@ export default class TodoListController implements MvcController {
   }
 
   async update(request: HttpRequest): Promise<HttpResponse> {
-    const { uid_string } = request.params;
-    const { id_user_string } = request.params;
+    const { uid } = request.params;
+    const { id_user } = request.params;
 
     //id_user_string
-    const id_user = parseInt(id_user_string);
-    const uid = parseInt(uid_string);
+    //const id_user = parseInt(id_user_string);
+    //const uid = parseInt(uid_string);
 
     try {
       //problema se escreve o objeto
@@ -127,6 +127,7 @@ export default class TodoListController implements MvcController {
 
       return ok(result);
     } catch (error) {
+      console.log(error);
       return serverError();
     }
   }

@@ -4,7 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from "typeorm";
 import UserRoutes from "../../../../../features/user/presentation/routes/index";
 import { UserEntity } from "./index";
@@ -12,7 +12,7 @@ import { v4 as uuid } from "uuid";
 
 @Entity({ name: "todo_list" }) //, schema: "lista1"
 export class TodoListEntity extends BaseEntity {
-  @PrimaryGeneratedColumn({ name: "id" })
+  @PrimaryColumn({ name: "id" })
   uid?: string;
 
   @Column({ name: "title" })
@@ -22,13 +22,13 @@ export class TodoListEntity extends BaseEntity {
   detail: string;
 
   @Column()
-  id_user: number;
+  id_user: string;
 
   @ManyToOne(() => UserEntity, (users) => users.uid)
   @JoinColumn({ name: "id_user", referencedColumnName: "uid" })
   autor?: UserRoutes;
 
-  constructor(title: string, detail: string, id_user: number, uid?: number) {
+  constructor(title: string, detail: string, id_user: string, uid?: string) {
     super();
     this.title = title;
     this.detail = detail;

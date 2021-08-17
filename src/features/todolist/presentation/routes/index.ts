@@ -20,16 +20,16 @@ export default class TodoListRoutes {
     const routes = Router();
 
     routes.get(
-      "/messages/:id_user_string",
+      "/messages/:id_user",
       routerMvcAdapter(makeController(), EMvc.INDEX)
     );
     routes.post("/message", routerMvcAdapter(makeController(), EMvc.STORE));
     routes.put(
-      "/message/:uid_string",
+      "/message/:uid",
       routerMvcAdapter(makeController(), EMvc.UPDATE)
     );
     routes.delete(
-      "/message/:uid_string",
+      "/message/:uid",
       routerMvcAdapter(makeController(), EMvc.DELETE)
     );
 

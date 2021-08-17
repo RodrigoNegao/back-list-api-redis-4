@@ -3,3 +3,4 @@ node_modules
 yarn.*
 /coverage
 /dist
+testdb.db

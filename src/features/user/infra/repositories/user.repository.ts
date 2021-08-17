@@ -40,8 +40,8 @@ export default class UserRepository {
     return Object.assign({}, params, result);
   }
 
-  //uid: number,
-  async update(uid: number, params: User): Promise<User | undefined> {
+  //uid: string,
+  async update(uid: string, params: User): Promise<User | undefined> {
     const { user, password } = params;
 
     //It works https://typeorm.io/#/

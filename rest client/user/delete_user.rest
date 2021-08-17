@@ -1,2 +1,2 @@
-DELETE   http://localhost:8080/user/ HTTP/1.1
+DELETE   http://localhost:8080/06758592-70a0-471e-bf42-e3da41792586 HTTP/1.1
 content-type: application/json

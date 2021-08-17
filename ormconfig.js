@@ -24,14 +24,8 @@ if (process.env.NODE_ENV.toString() === "test") {
       },
     },
     // TODO dist para produção
-    entities: [
-      "dist/core/infra/data/database/entities/**/*" ||
-        "src/core/infra/data/database/entities/**/*",
-    ],
-    migrations: [
-      "dist/core/infra/data/database/migrations/**/*" ||
-        "src/core/infra/data/database/migrations/**/*",
-    ],
+    entities: ["src/core/infra/data/database/entities/**/*"],
+    migrations: ["src/core/infra/data/database/migrations/**/*"],
     cli: {
       entitiesDir: "src/core/infra/data/database/entities",
       migrationsDir: "src/core/infra/data/database/migrations",

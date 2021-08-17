@@ -3,7 +3,7 @@ import { TodoListEntity } from "../../../../core/infra";
 import { TodoList } from "../../domain/models";
 
 export default class TodoListRepository {
-  async getTodoLists(id_user: number): Promise<TodoList[]> {
+  async getTodoLists(id_user: string): Promise<TodoList[]> {
     const todoLists = await TodoListEntity.find({
       where: { id_user: id_user },
     });
@@ -19,8 +19,8 @@ export default class TodoListRepository {
   }
 
   async getTodoList(
-    uid: number,
-    id_user: number
+    uid: string,
+    id_user: string
   ): Promise<TodoList | undefined> {
     const todoList = await TodoListEntity.findOne({
       where: { uid: uid, id_user: id_user },
@@ -48,7 +48,7 @@ export default class TodoListRepository {
     return Object.assign({}, params, todoList);
   }
 
-  async update(uid: number, params: TodoList): Promise<TodoList | undefined> {
+  async update(uid: string, params: TodoList): Promise<TodoList | undefined> {
     const { title, detail } = params;
 
     const todoList = await TodoListEntity.update(uid, {
@@ -59,7 +59,7 @@ export default class TodoListRepository {
     return Object.assign({}, params, todoList);
   }
 
-  async delete(uid: number): Promise<TodoList> {
+  async delete(uid: string): Promise<TodoList> {
     //const { uid } = params;
     //const exist = await TodoListEntity.findOne(uid);
 

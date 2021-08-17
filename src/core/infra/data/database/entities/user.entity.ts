@@ -12,7 +12,7 @@ export class UserEntity extends BaseEntity {
   @Column()
   password: string;
 
-  constructor(user: string, password: string, uid?: number) {
+  constructor(user: string, password: string, uid?: string) {
     super();
     this.user = user;
     this.password = password;
