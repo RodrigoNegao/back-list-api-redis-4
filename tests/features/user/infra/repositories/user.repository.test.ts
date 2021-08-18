@@ -18,15 +18,13 @@ const makeCreateParams = async (): Promise<User> => {
   };
 };
 
-// const makeUpdateParams = async (userId: string): Promise<User> => {
-//   return {
-//     name: "any_name",
-//     description: "updated",
-//     startDate: new Date(),
-//     endDate: new Date(),
-//     userUid: userId,
-//   };
-// };
+const makeUpdateParams = async (userId: string): Promise<User> => {
+  return {
+    user: "any_user",
+    password: "any_password",
+    uid: userId,
+  };
+};
 
 const makeUsersDB = async (): Promise<UserEntity[]> => {
   //const user = await makeUserDB();
@@ -67,7 +65,7 @@ describe("User Repository", () => {
     });
 
     describe("getUsers", () => {
-      test("Deveria retornar uma lista de Users", async () => {
+      test("02 Deveria retornar uma lista de Users", async () => {
         const sut = new UserRepository();
 
         const users = await makeUsersDB();
@@ -79,46 +77,44 @@ describe("User Repository", () => {
     });
   });
 
-  // describe("getUser", () => {
-  //   test("Deveria retornar undefined quandobuscar um ID inexistente", async () => {
-  //     const sut = new UserRepository();
-  //     const result = await sut.getUser(uuid(), uuid());
+  describe("getUser", () => {
+    test("03 Deveria retornar undefined quandobuscar um ID inexistente", async () => {
+      const sut = new UserRepository();
+      const result = await sut.getUser(uuid(), uuid());
 
-  //     expect(result).toBeFalsy();
-  //   });
+      expect(result).toBeFalsy();
+    });
 
-  //   test("Deveria retornar um projeto para ID valido", async () => {
-  //     const sut = new UserRepository();
-  //     const user = await makeUserDB();
-  //     const result = await sut.getUser(user.user, user.password);
+    test("04 Deveria retornar um projeto para ID valido", async () => {
+      const sut = new UserRepository();
+      const user = await makeUserDB();
+      const result = await sut.getUser(user.user, user.password);
 
-  //     expect(result).toBeTruthy();
-  //     expect(result?.uid).toBe(user.uid);
-  //     expect(result?.user).toBe(user.user);
-  //     expect(result?.password).toBe(user.password);
-  //   });
-  // });
+      expect(result).toBeTruthy();
+      expect(result?.uid).toBe(user.uid);
+    });
+  });
 
-  // describe("update", () => {
-  //   test("Deveria retornar um projeto para um ID válido", async () => {
-  //     const sut = new UserRepository();
-  //     const user = await makeUserDB();
-  //     const params = await makeUpdateParams(user.uid);
+  describe("update", () => {
+    test("05 Deveria retornar um projeto para um ID válido", async () => {
+      const sut = new UserRepository();
+      const user = await makeUserDB();
+      const params = await makeUpdateParams(user.uid);
 
-  //     const result = await sut.update(user.uid!, params);
+      const result = await sut.update(user.uid!, params);
 
-  //     expect(result).toBeTruthy();
-  //   });
-  // });
+      expect(result).toBeTruthy();
+    });
+  });
 
-  // describe("delete", () => {
-  //   test("Deveria excluir um projeto para um ID válido", async () => {
-  //     const sut = new UserRepository();
-  //     const user = await makeUserDB();
+  describe("delete", () => {
+    test("06 Deveria excluir um projeto para um ID válido", async () => {
+      const sut = new UserRepository();
+      const user = await makeUserDB();
 
-  //     const result = await sut.delete(`${user.uid}`);
+      const result = await sut.delete(`${user.uid}`);
 
-  //     expect(result).toBeTruthy();
-  //   });
-  // });
+      expect(result).toBeTruthy();
+    });
+  });
 });

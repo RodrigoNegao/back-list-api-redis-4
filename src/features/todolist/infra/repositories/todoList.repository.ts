@@ -19,11 +19,10 @@ export default class TodoListRepository {
   }
 
   async getTodoList(
-    uid: string,
-    id_user: string
+    uid: string //id_user: string
   ): Promise<TodoList | undefined> {
     const todoList = await TodoListEntity.findOne({
-      where: { uid: uid, id_user: id_user },
+      where: { uid: uid }, //, id_user: id_user
     });
 
     if (!todoList) return undefined;

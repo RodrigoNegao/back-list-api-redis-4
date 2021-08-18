@@ -33,10 +33,10 @@ export default class App {
 
     router.get("/", (_: Request, res: Response) => res.send("API RUNNING..."));
 
-    const todoListRoutes = new TodoListRoutes().init();
+    const todoListRoutes = new TodoListRoutes().init(router);
     this.#express.use(todoListRoutes);
 
-    const userRoutes = new UserRoutes().init();
+    const userRoutes = new UserRoutes().init(router);
     this.#express.use(userRoutes);
   }
 

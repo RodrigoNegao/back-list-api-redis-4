@@ -55,7 +55,7 @@ export default class TodoListController implements MvcController {
   }
 
   public async show(request: HttpRequest) {
-    const { uid, id_user } = request.params;
+    const { uid } = request.params; //id_user
 
     //const id_user = parseInt(id_user_string);
     //const uid = parseInt(uid_string);
@@ -66,7 +66,7 @@ export default class TodoListController implements MvcController {
       if (cache) {
         return ok(Object.assign({}, cache, { cache: true }));
       }
-      const todoList = await this.#repository.getTodoList(uid, id_user);
+      const todoList = await this.#repository.getTodoList(uid); //id_user
 
       if (!todoList) {
         return notFound(new DataNotFoundError());
@@ -92,6 +92,8 @@ export default class TodoListController implements MvcController {
     //const uid = parseInt(uid_string);
     //id_user
     try {
+      await this.#cache.del(`todoList:${uid}`);
+      await this.#cache.del("todoList:all");
       const result = await this.#repository.delete(uid);
       return ok(result);
     } catch (error) {

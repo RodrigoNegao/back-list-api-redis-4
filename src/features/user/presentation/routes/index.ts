@@ -21,8 +21,8 @@ const makeController = (): MvcController => {
 };
 
 export default class UserRoutes {
-  public init(): Router {
-    const routes = Router();
+  public init(routes: Router): Router {
+    //const routes = Router(); // editado para JEST
 
     routes.post(
       "/login",

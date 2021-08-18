@@ -16,8 +16,8 @@ const makeController = (): MvcController => {
 };
 
 export default class TodoListRoutes {
-  public init(): Router {
-    const routes = Router();
+  public init(routes: Router): Router {
+    //const routes = Router(); JEST
 
     routes.get(
       "/messages/:id_user",
