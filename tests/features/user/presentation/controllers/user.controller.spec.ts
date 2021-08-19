@@ -26,10 +26,13 @@ const makeRequestStore = (): HttpRequest => ({
 //   UserEntity.create({
 //     user: "any_user",
 //     password: "any_password",
+//     uid: "any_id_user",
 //   }).save();
 
 const makeUserResult = () => ({
   uid: "any_uid",
+  user: "any_user2",
+  password: "any_password",
 });
 
 const makeRequestShow = (): HttpRequest => ({
@@ -159,13 +162,15 @@ describe("User Controller", () => {
     });
 
     test("03 Deveria retornar 200 se o user existir", async () => {
+      const userResult = makeUserResult();
+
       const getSpy = jest
         .spyOn(CacheRepository.prototype, "get")
-        .mockResolvedValue(null);
+        .mockResolvedValue(userResult);
 
       jest
         .spyOn(UserRepository.prototype, "getUser")
-        .mockResolvedValue(makeUserResult());
+        .mockResolvedValue(userResult);
 
       const setSpy = jest
         .spyOn(CacheRepository.prototype, "set")
@@ -174,8 +179,8 @@ describe("User Controller", () => {
       const sut = makeSut();
       const result = await sut.show(makeRequestShow());
 
-      expect(result).toEqual(ok(makeUserResult()));
-      expect(getSpy).toHaveBeenCalledWith(`user:${makeUserResult().uid}`);
+      expect(result).toEqual(ok(userResult));
+      expect(getSpy).toHaveBeenCalledWith(`user:${userResult.uid}`);
     });
 
     test("04 Deveria retornar 200 se o user existir com SETEX", async () => {

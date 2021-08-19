@@ -1,3 +1,4 @@
+import { UserEntity } from "../../../../../src/core/infra";
 import { CacheRepository } from "../../../../../src/core/infra/repositories/cache.repository";
 import {
   DataNotFoundError,
@@ -6,6 +7,7 @@ import {
   ok,
   serverError,
 } from "../../../../../src/core/presentation";
+import { TodoList } from "../../../../../src/features/todolist/domain/models";
 import TodoListRepository from "../../../../../src/features/todolist/infra/repositories/todoList.repository";
 import TodoListController from "../../../../../src/features/todolist/presentation/controllers/todoList.controller";
 
@@ -15,11 +17,9 @@ const makeSut = (): TodoListController =>
 
 const makeRequestStore = (): HttpRequest => ({
   body: {
-    name: "any_name",
-    description: "any_description",
-    startDate: new Date("2021-07-22"),
-    endDate: new Date("2021-07-22"),
-    userUid: "any_uid",
+    title: "any_title",
+    detail: "any_detail",
+    uid: "any_uid",
   },
   params: {},
 });
@@ -27,19 +27,24 @@ const makeRequestStore = (): HttpRequest => ({
 // startDate: new Date(),
 // endDate: new Date(),
 
-const makeTodoListResult = () => ({
+const makeTodoListResult = (): TodoList => ({
   uid: "any_uid",
-  name: "any_name",
-  description: "any_description",
-  startDate: new Date("2021-07-22"),
-  endDate: new Date("2021-07-22"),
-  userUid: "any_uid",
+  title: "any_title",
+  detail: "any_detail",
+  id_user: "any_user",
 });
 
 const makeRequestShow = (): HttpRequest => ({
   params: { uid: "any_uid" },
   body: {},
 });
+
+const makeUserDB = async (): Promise<UserEntity> =>
+  UserEntity.create({
+    user: "any_user",
+    password: "any_password",
+    uid: "any_id_user",
+  }).save();
 
 describe("TodoList Controller", () => {
   beforeEach(() => {
@@ -81,7 +86,7 @@ describe("TodoList Controller", () => {
       const datastore = makeRequestStore();
       await sut.store(datastore);
 
-      expect(delSpy).toHaveBeenCalledWith("todolist:all");
+      expect(delSpy).toHaveBeenCalledWith("todoList:all");
     });
   });
 
@@ -91,10 +96,11 @@ describe("TodoList Controller", () => {
       jest
         .spyOn(CacheRepository.prototype, "get")
         .mockRejectedValue(new Error());
+      const requestShow = await makeRequestShow();
 
       // Criar o SUT
       const sut = makeSut();
-      const result = await sut.index();
+      const result = await sut.index(requestShow);
       expect(result).toEqual(serverError());
     });
 
@@ -113,10 +119,10 @@ describe("TodoList Controller", () => {
 
       // Criar o SUT
       const sut = makeSut();
-      const result = await sut.index();
+      //const result = await sut.index();
 
-      expect(getSpy).toHaveBeenCalledWith("todolist:all");
-      expect(setSpy).toHaveBeenCalledWith("todolist:all", [
+      expect(getSpy).toHaveBeenCalledWith("todoList:all");
+      expect(setSpy).toHaveBeenCalledWith("todoList:all", [
         makeTodoListResult(),
       ]);
     });
@@ -128,7 +134,7 @@ describe("TodoList Controller", () => {
 
       // Criar o SUT
       const sut = makeSut();
-      const result = await sut.index();
+      const result = await sut.index(makeRequestShow());
 
       expect(result).toEqual(
         ok([Object.assign({}, makeTodoListResult(), { cache: true })])
@@ -182,7 +188,7 @@ describe("TodoList Controller", () => {
 
       expect(result).toEqual(ok(makeTodoListResult()));
       expect(getSpy).toHaveBeenCalledWith(
-        `todolist:${makeTodoListResult().uid}`
+        `todoList:${makeTodoListResult().uid}`
       );
     });
 
@@ -204,10 +210,10 @@ describe("TodoList Controller", () => {
 
       expect(result).toEqual(ok(makeTodoListResult()));
       expect(getSpy).toHaveBeenLastCalledWith(
-        `todolist:${makeTodoListResult().uid}`
+        `todoList:${makeTodoListResult().uid}`
       );
       expect(setSpy).toHaveBeenLastCalledWith(
-        `todolist:${makeTodoListResult().uid}`,
+        `todoList:${makeTodoListResult().uid}`,
         makeTodoListResult(),
         10
       );
@@ -226,7 +232,7 @@ describe("TodoList Controller", () => {
       );
 
       expect(getSpy).toHaveBeenLastCalledWith(
-        `todolist:${makeTodoListResult().uid}`
+        `todoList:${makeTodoListResult().uid}`
       );
     });
   });

@@ -10,30 +10,30 @@ import { v4 as uuid } from "uuid";
 
 jest.mock("ioredis");
 
-const makeUserDB = async (): Promise<UserEntity> =>
-  UserEntity.create({
-    user: "any_user",
+const makeUserDB = async (): Promise<UserEntity> => {
+  return await UserEntity.create({
+    user: "any_user5",
     password: "any_password",
   }).save();
+};
 
 const makeCreateParams = async (): Promise<TodoList> => {
   const user = await makeUserDB();
   return {
-    name: "any_name",
-    description: "any_description",
-    startDate: new Date(),
-    endDate: new Date(),
-    userUid: user.uid,
+    uid: "any_uid",
+    title: "any_title",
+    detail: "any_detail",
+    id_user: user.uid,
   };
 };
 
 const makeUpdateParams = async (userId: string): Promise<TodoList> => {
+  const user = await makeUserDB();
   return {
-    name: "any_name",
-    description: "updated",
-    startDate: new Date(),
-    endDate: new Date(),
-    userUid: userId,
+    uid: "any_uid",
+    title: "any_title",
+    detail: "any_detail",
+    id_user: user.uid,
   };
 };
 
@@ -41,13 +41,17 @@ const makeTodoListsDB = async (): Promise<TodoListEntity[]> => {
   const user = await makeUserDB();
 
   const p1 = await TodoListEntity.create({
-    name: "any_name",
-    userUid: user.uid,
+    uid: "any_uid1",
+    title: "any_title",
+    detail: "any_detail",
+    id_user: user.uid,
   }).save();
 
   const p2 = await TodoListEntity.create({
-    name: "any_name",
-    userUid: user.uid,
+    uid: "any_uid2",
+    title: "any_title",
+    detail: "any_detail",
+    id_user: user.uid,
   }).save();
 
   return [p1, p2];
@@ -57,8 +61,10 @@ const makeTodoListDB = async (): Promise<TodoListEntity> => {
   const user = await makeUserDB();
 
   return await TodoListEntity.create({
-    name: "any_name",
-    userUid: user.uid,
+    uid: "any_uid3",
+    title: "any_title",
+    detail: "any_detail",
+    id_user: user.uid,
   }).save();
 };
 
@@ -78,13 +84,14 @@ describe("TodoList Routes", () => {
     await UserEntity.clear();
     jest.resetAllMocks();
   });
-  test("/GET todolists", async () => {
+  test("/GET messages", async () => {
+    const user = await makeUserDB();
     const todolists = await makeTodoListsDB();
 
     jest.spyOn(IORedis.prototype, "get").mockResolvedValue(null);
 
     await request(server)
-      .get("/todolists")
+      .get(`/messages/${user.uid}`)
       .send()
       .expect(200)
       .expect((res) => {
@@ -93,7 +100,8 @@ describe("TodoList Routes", () => {
       });
   });
 
-  test("/GET todolists - CACHE", async () => {
+  test("/GET messages - CACHE", async () => {
+    const user = await makeUserDB();
     const todolists = await makeTodoListsDB();
 
     jest
@@ -101,7 +109,7 @@ describe("TodoList Routes", () => {
       .mockResolvedValue(JSON.stringify(todolists));
 
     await request(server)
-      .get("/todolists")
+      .get(`/messages/${user.uid}`)
       .send()
       .expect(200)
       .expect((res) => {
@@ -110,56 +118,55 @@ describe("TodoList Routes", () => {
       });
   });
 
-  test("/GET todolists - Erro 500", async () => {
+  test("/GET messages - Erro 500", async () => {
     const todolists = await makeTodoListsDB();
 
     jest.spyOn(IORedis.prototype, "get").mockRejectedValue(null);
 
-    await request(server).get("/todolists").send().expect(500);
+    await request(server).get("/messages").send().expect(500);
   });
 
-  describe("/POST todolist", () => {
-    test("Deveria retornar 400 ao tentar salvar um projeto sem nome", async () => {
+  describe("/POST message", () => {
+    test("Deveria retornar 400 ao tentar salvar um projeto sem title", async () => {
       const user = await makeUserDB();
       await request(server)
-        .post("/todolists")
+        .post("/message")
         .send({
-          description: "any_description",
-          startDate: new Date(),
-          endDate: new Date(),
-          userUid: user.uid,
+          uid: "any_uid",
+          title: "any_title",
+          detail: "any_detail",
+          id_user: user.uid,
         })
-        .expect(400, { error: "Missing param: name" });
+        .expect(400, { error: "Missing param: title" });
     });
 
     test("Deveria retornar 200", async () => {
       const user = await makeUserDB();
       await request(server)
-        .post("/todolists")
+        .post("/message")
         .send({
-          name: "any_name",
-          description: "any_description",
-          startDate: new Date(),
-          endDate: new Date(),
-          userUid: user.uid,
+          uid: "any_uid",
+          title: "any_title",
+          detail: "any_detail",
+          id_user: user.uid,
         })
         .expect(200)
         .expect((res) => {
           expect(res.body.uid).toBeTruthy();
-          expect(res.body.name).toBe("any_name");
-          expect(res.body.userUid).toBe(user.uid);
+          expect(res.body.title).toBe("any_title");
+          expect(res.body.id_user).toBe(user.uid);
         });
     });
   });
 
-  describe("/GET todolists/:uid", () => {
+  describe("/GET message/:uid", () => {
     test("Deveria reotrnar um projeto para um ID válido", async () => {
       const todolist = await makeTodoListDB();
 
       jest.spyOn(IORedis.prototype, "get").mockResolvedValue(null);
 
       await request(server)
-        .get(`/todolist/${todolist.uid}`)
+        .get(`/message/${todolist.uid}`)
         .send()
         .expect(200)
         .expect((res) => {
@@ -170,7 +177,7 @@ describe("TodoList Routes", () => {
 
     test("Deve retornar 404 quando o projeto não existir", async () => {
       jest.spyOn(IORedis.prototype, "get").mockResolvedValue(null);
-      await request(server).get(`/todolists/${uuid()}`).send().expect(404);
+      await request(server).get(`/message/${uuid()}`).send().expect(404);
     });
   });
 });

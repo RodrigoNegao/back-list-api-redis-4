@@ -9,7 +9,6 @@ import {
 import UserRoutes from "../../../../../features/user/presentation/routes/index";
 import { UserEntity } from "./index";
 import { v4 as uuid } from "uuid";
-import { User } from "../../../../../features/user/domain/models";
 
 @Entity({ name: "todo_list" }) //, schema: "lista1"
 export class TodoListEntity extends BaseEntity {
@@ -27,7 +26,7 @@ export class TodoListEntity extends BaseEntity {
 
   @ManyToOne(() => UserEntity, (users) => users.uid)
   @JoinColumn({ name: "id_user", referencedColumnName: "uid" })
-  autor?: User;
+  user?: UserEntity;
 
   constructor(title: string, detail: string, id_user: string, uid?: string) {
     super();
