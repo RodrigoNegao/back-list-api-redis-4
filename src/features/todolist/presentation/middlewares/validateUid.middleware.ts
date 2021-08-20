@@ -10,7 +10,7 @@ export class UidMiddleware {
   async handle(req: HttpMiddleware): Promise<HttpResponse> {
     const { body } = req;
 
-    for (const field of ["uid"]) {
+    for (const field of ["uid", "title", "detail", "id_user"]) {
       const error = new RequireFieldsValidator(field).validate(body);
       if (error) {
         return badRequest(error);

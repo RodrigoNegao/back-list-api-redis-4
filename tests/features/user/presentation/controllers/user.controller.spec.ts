@@ -161,12 +161,12 @@ describe("User Controller", () => {
       expect(result).toEqual(notFound(new DataNotFoundError()));
     });
 
-    test("03 Deveria retornar 200 se o user existir", async () => {
+    test("03 Deveria retornar 200 se o user existir Postgree", async () => {
       const userResult = makeUserResult();
 
       const getSpy = jest
         .spyOn(CacheRepository.prototype, "get")
-        .mockResolvedValue(userResult);
+        .mockResolvedValue(null);
 
       jest
         .spyOn(UserRepository.prototype, "getUser")
@@ -181,6 +181,10 @@ describe("User Controller", () => {
 
       expect(result).toEqual(ok(userResult));
       expect(getSpy).toHaveBeenCalledWith(`user:${userResult.uid}`);
+      expect(setSpy).toHaveBeenCalledWith(
+        `user:${makeUserResult().uid}`,
+        makeUserResult()
+      );
     });
 
     test("04 Deveria retornar 200 se o user existir com SETEX", async () => {

@@ -20,7 +20,7 @@ const makeUserDB = async (): Promise<UserEntity> => {
 const makeCreateParams = async (): Promise<TodoList> => {
   const user = await makeUserDB();
   return {
-    uid: "any_uid",
+    uid: "any_uid1",
     title: "any_title",
     detail: "any_detail",
     id_user: user.uid,
@@ -30,7 +30,7 @@ const makeCreateParams = async (): Promise<TodoList> => {
 const makeUpdateParams = async (userId: string): Promise<TodoList> => {
   const user = await makeUserDB();
   return {
-    uid: "any_uid",
+    uid: "any_uid2",
     title: "any_title",
     detail: "any_detail",
     id_user: user.uid,
@@ -41,14 +41,14 @@ const makeTodoListsDB = async (): Promise<TodoListEntity[]> => {
   const user = await makeUserDB();
 
   const p1 = await TodoListEntity.create({
-    uid: "any_uid1",
+    uid: "any_uid3",
     title: "any_title",
     detail: "any_detail",
     id_user: user.uid,
   }).save();
 
   const p2 = await TodoListEntity.create({
-    uid: "any_uid2",
+    uid: "any_uid4",
     title: "any_title",
     detail: "any_detail",
     id_user: user.uid,
@@ -133,7 +133,7 @@ describe("TodoList Routes", () => {
         .post("/message")
         .send({
           uid: "any_uid",
-          title: "any_title",
+          //title: "any_title",
           detail: "any_detail",
           id_user: user.uid,
         })
