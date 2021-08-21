@@ -11,9 +11,18 @@ import { TodoList } from "../../../../../src/features/todolist/domain/models";
 import TodoListRepository from "../../../../../src/features/todolist/infra/repositories/todoList.repository";
 import TodoListController from "../../../../../src/features/todolist/presentation/controllers/todoList.controller";
 
+//jest.mock("ioredis");
+
 //LIGAR O REDIS ou mokar .mockResolvedValue
 const makeSut = (): TodoListController =>
   new TodoListController(new TodoListRepository(), new CacheRepository());
+
+// const makeUserDB = async (): Promise<UserEntity> =>
+//   UserEntity.create({
+//     user: "any_user",
+//     password: "any_password",
+//     uid: "any_id_user",
+//   }).save();
 
 const makeRequestStore = (): HttpRequest => ({
   body: {
@@ -39,20 +48,25 @@ const makeRequestShow = (): HttpRequest => ({
   body: {},
 });
 
-// const makeUserDB = async (): Promise<UserEntity> =>
-//   UserEntity.create({
-//     user: "any_user",
-//     password: "any_password",
-//     uid: "any_id_user",
-//   }).save();
+const makeTodoListsDB = async (): Promise<TodoListEntity[]> => {
+  //const user = await makeUserDB();
+
+  const p1 = await TodoListEntity.create({
+    title: "any_title",
+    detail: "any_detail",
+    id_user: "any_user",
+  }).save();
+
+  const p2 = await TodoListEntity.create({
+    title: "any_title",
+    detail: "any_detail",
+    id_user: "any_user",
+  }).save();
+
+  return [p1, p2];
+};
 
 describe("TodoList Controller", () => {
-  beforeEach(async () => {
-    await TodoListEntity.clear();
-    await UserEntity.clear();
-    await jest.resetAllMocks();
-  });
-
   // Testar o STORE do TodoList Controller
   describe("Store", () => {
     test("Deveria retornar status 500 se houver erro", async () => {
@@ -68,7 +82,9 @@ describe("TodoList Controller", () => {
     });
 
     test("Deveria chamar o Repositorio com valores corretos", async () => {
-      const createSpy = jest.spyOn(TodoListRepository.prototype, "create");
+      const createSpy = jest
+        .spyOn(TodoListRepository.prototype, "create")
+        .mockResolvedValue(makeTodoListResult());
 
       const delSpy = jest
         .spyOn(CacheRepository.prototype, "del")
@@ -78,11 +94,18 @@ describe("TodoList Controller", () => {
       const datastore = makeRequestStore();
       await sut.store(datastore);
 
+      expect(delSpy).toHaveBeenCalledWith("todoList:all");
       expect(createSpy).toHaveBeenCalledWith(makeRequestStore().body);
     });
 
     test("Deve apagar a Cache REDIS TodoList", async () => {
-      const delSpy = jest.spyOn(CacheRepository.prototype, "del");
+      const createSpy = jest
+        .spyOn(TodoListRepository.prototype, "create")
+        .mockResolvedValue(makeTodoListResult());
+
+      const delSpy = jest
+        .spyOn(CacheRepository.prototype, "del")
+        .mockResolvedValue(true);
 
       const sut = makeSut();
       const datastore = makeRequestStore();
@@ -109,7 +132,7 @@ describe("TodoList Controller", () => {
     test("Deveria retornar Lista", async () => {
       jest
         .spyOn(TodoListRepository.prototype, "getTodoLists")
-        .mockResolvedValue([makeTodoListResult()]);
+        .mockResolvedValue([makeTodoListResult()]); //makeTodoListsDB
 
       const getSpy = jest
         .spyOn(CacheRepository.prototype, "get")
@@ -121,8 +144,9 @@ describe("TodoList Controller", () => {
 
       // Criar o SUT
       const sut = makeSut();
-      //const result = await sut.index();
+      const result = await sut.index(makeRequestShow());
 
+      expect(result).toStrictEqual(ok([makeTodoListResult()]));
       expect(getSpy).toHaveBeenCalledWith("todoList:all");
       expect(setSpy).toHaveBeenCalledWith("todoList:all", [
         makeTodoListResult(),
@@ -200,7 +224,7 @@ describe("TodoList Controller", () => {
         .mockResolvedValue(null);
 
       const setSpy = jest
-        .spyOn(CacheRepository.prototype, "setex")
+        .spyOn(CacheRepository.prototype, "set") // setex
         .mockResolvedValue(null);
 
       jest
@@ -216,9 +240,8 @@ describe("TodoList Controller", () => {
       );
       expect(setSpy).toHaveBeenLastCalledWith(
         `todoList:${makeTodoListResult().uid}`,
-        makeTodoListResult(),
-        10
-      );
+        makeTodoListResult()
+      ); //,10
     });
 
     test("05 Deveria retornar 200 se o projeto CACHE existir", async () => {

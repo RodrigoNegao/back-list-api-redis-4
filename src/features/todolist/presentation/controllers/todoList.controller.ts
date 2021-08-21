@@ -26,7 +26,7 @@ export default class TodoListController implements MvcController {
   public async index(request: HttpRequest) {
     const { id_user } = request.params;
     try {
-      const cache = await this.#cache.get("lodoList:all");
+      const cache = await this.#cache.get("todoList:all");
 
       //console.log("string>>>", id_user_string);
       //const id_user = parseInt(id_user_string);
