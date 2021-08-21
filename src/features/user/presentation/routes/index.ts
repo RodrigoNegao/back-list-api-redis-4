@@ -8,11 +8,7 @@ import {
 } from "../../../../core/presentation";
 import UserRepository from "../../infra/repositories/user.repository";
 import UserController from "../controllers/user.controller";
-import {
-  PasswordMiddleware,
-  UserFieldMiddleware,
-  UserMiddleware,
-} from "../middlewares";
+import { UserMiddleware } from "../middlewares";
 
 const makeController = (): MvcController => {
   const repository = new UserRepository();

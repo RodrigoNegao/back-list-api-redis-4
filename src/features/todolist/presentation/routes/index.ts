@@ -2,6 +2,7 @@ import { Router } from "express";
 import { CacheRepository } from "../../../../core/infra/repositories/cache.repository";
 import {
   EMvc,
+  middlewareAdapter,
   MvcController,
   routerMvcAdapter,
 } from "../../../../core/presentation";
@@ -23,9 +24,14 @@ export default class TodoListRoutes {
       "/messages/:id_user",
       routerMvcAdapter(makeController(), EMvc.INDEX)
     );
-    routes.post("/message", routerMvcAdapter(makeController(), EMvc.STORE));
+    routes.post(
+      "/message",
+      middlewareAdapter(new UidMiddleware()),
+      routerMvcAdapter(makeController(), EMvc.STORE)
+    );
     routes.put(
       "/message/:uid",
+      middlewareAdapter(new UidMiddleware()),
       routerMvcAdapter(makeController(), EMvc.UPDATE)
     );
     routes.delete(

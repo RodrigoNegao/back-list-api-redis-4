@@ -12,7 +12,7 @@ jest.mock("ioredis");
 
 const makeUserDB = async (): Promise<UserEntity> => {
   return await UserEntity.create({
-    user: "any_user546",
+    user: "any_user",
     password: "any_password",
   }).save();
 };
@@ -85,56 +85,72 @@ describe("TodoList Routes", () => {
   afterAll(async () => {
     await new Database().disconnectDatabase();
   });
-  test("/GET messages", async () => {
-    const user = await makeUserDB();
-    const todolists = await makeTodoListsDB();
+  describe("/GET :uid", () => {
+    test("/GET messages", async () => {
+      const todolists = await makeTodoListsDB();
 
-    jest.spyOn(IORedis.prototype, "get").mockResolvedValue(null);
+      jest.spyOn(IORedis.prototype, "get").mockResolvedValue(null);
 
-    await request(server)
-      .get(`/messages/${user.uid}`)
-      .send()
-      .expect(200)
-      .expect((res) => {
-        expect((res.body as []).length).toBe(todolists.length);
-        expect(res.body[0].cache).toBeFalsy();
-      });
-  });
+      await request(server)
+        .get(`/messages/${todolists[0].id_user}`)
+        .send()
+        .expect(200)
+        .expect((res) => {
+          expect((res.body as []).length).toBe(todolists.length);
+          expect(res.body[0].cache).toBeFalsy();
+        });
+    });
 
-  test("/GET messages - CACHE", async () => {
-    const user = await makeUserDB();
-    const todolists = await makeTodoListsDB();
+    test("/GET messages - CACHE", async () => {
+      const user = await makeUserDB();
+      const todolists = await makeTodoListsDB();
 
-    jest
-      .spyOn(IORedis.prototype, "get")
-      .mockResolvedValue(JSON.stringify(todolists));
+      jest
+        .spyOn(IORedis.prototype, "get")
+        .mockResolvedValue(JSON.stringify(todolists));
 
-    await request(server)
-      .get(`/messages/${user.uid}`)
-      .send()
-      .expect(200)
-      .expect((res) => {
-        expect((res.body as []).length).toBe(todolists.length);
-        expect(res.body[0].cache).toBeTruthy();
-      });
-  });
+      await request(server)
+        .get(`/messages/${user.uid}`)
+        .send()
+        .expect(200)
+        .expect((res) => {
+          expect((res.body as []).length).toBe(todolists.length);
+          expect(res.body[0].cache).toBeTruthy();
+        });
+    });
 
-  test("/GET messages - Erro 500", async () => {
-    const todolists = await makeTodoListsDB();
+    test("/GET messages - Erro 500", async () => {
+      const todolists = await makeTodoListsDB();
 
-    jest.spyOn(IORedis.prototype, "get").mockRejectedValue(null);
+      jest.spyOn(IORedis.prototype, "get").mockRejectedValue(null);
 
-    await request(server).get("/messages").send().expect(500);
+      await request(server)
+        .get(`/messages/${todolists[0].id_user}`)
+        .send()
+        .expect(500);
+    });
   });
 
   describe("/POST message", () => {
-    test("Deveria retornar 400 ao tentar salvar um projeto sem title", async () => {
+    test("Deveria retornar 400 ao tentar salvar um Todo sem Title", async () => {
       const user = await makeUserDB();
       await request(server)
         .post("/message")
         .send({
-          uid: "any_uid",
+          //uid: "any_uid",
           //title: "any_title",
+          detail: "any_detail",
+          id_user: user.uid,
+        })
+        .expect(400, { error: "Missing param: title" });
+    });
+
+    test("Deveria retornar 400 ao tentar salvar um Todo sem Title Vazio", async () => {
+      const user = await makeUserDB();
+      await request(server)
+        .post("/message")
+        .send({
+          title: "",
           detail: "any_detail",
           id_user: user.uid,
         })
@@ -161,7 +177,7 @@ describe("TodoList Routes", () => {
   });
 
   describe("/GET message/:uid", () => {
-    test("Deveria reotrnar um projeto para um ID válido", async () => {
+    test("Deveria reotornar um ToDo para um ID válido", async () => {
       const todolist = await makeTodoListDB();
 
       jest.spyOn(IORedis.prototype, "get").mockResolvedValue(null);
@@ -179,6 +195,85 @@ describe("TodoList Routes", () => {
     test("Deve retornar 404 quando o projeto não existir", async () => {
       jest.spyOn(IORedis.prototype, "get").mockResolvedValue(null);
       await request(server).get(`/message/${uuid()}`).send().expect(404);
+    });
+  });
+
+  describe("PUT /message/:uid", () => {
+    test("Deveria alterar um ToDo", async () => {
+      const user = await makeUserDB();
+      const todolist = await makeTodoListDB();
+
+      jest.spyOn(IORedis.prototype, "del").mockResolvedValue(null);
+
+      await request(server)
+        .put(`/message/${todolist.uid}`)
+        .send({
+          title: "any_title",
+          detail: "any_detail",
+          id_user: user.uid,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.title).toBe("any_title");
+          expect(res.body.detail).toBe("any_detail");
+          expect(res.body.id_user).toBe(user.uid);
+        });
+    });
+
+    test("Deveria retornar status 400 ao tentar salvar um usuario sem uid", async () => {
+      const user = await makeUserDB();
+      const todolist = await makeTodoListDB();
+
+      await request(server)
+        .put(`/message/${todolist.uid}`)
+        .send({
+          //title: "any_title",
+          detail: "any_detail",
+          id_user: user.uid,
+        })
+        .expect(400, { error: "Missing param: title" });
+    });
+
+    test("Deveria retornar status 400 ao tentar salvar um user sem detail", async () => {
+      const user = await makeUserDB();
+      const todolist = await makeTodoListDB();
+
+      await request(server)
+        .put(`/message/${todolist.uid}`)
+        .send({
+          uid: "any_uid",
+          title: "any_title",
+          id_user: user.uid,
+        })
+        .expect(400, { error: "Missing param: detail" });
+    });
+
+    test("Deveria retornar status 400 ao tentrar salvar um usuario sem useruid", async () => {
+      const user = await makeUserDB();
+      const todolist = await makeTodoListDB();
+
+      await request(server)
+        .put(`/message/${todolist.uid}`)
+        .send({
+          uid: "any_uid",
+          title: "any_title",
+          detail: "any_detail",
+        })
+        .expect(400, { error: "Missing param: id_user" });
+    });
+  });
+
+  describe("DELETE", () => {
+    test("Deveria excluir um ToDo", async () => {
+      const todolist = await makeTodoListDB();
+
+      await request(server)
+        .delete(`/message/${todolist.uid}`)
+        .send()
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.raw).toStrictEqual([]);
+        });
     });
   });
 });

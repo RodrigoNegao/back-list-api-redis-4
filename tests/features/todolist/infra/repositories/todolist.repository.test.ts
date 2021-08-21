@@ -88,12 +88,12 @@ describe("TodoList Repository", () => {
     });
 
     describe("getTodoLists", () => {
-      test("Deveria retornar uma listade projetos", async () => {
+      test("Deveria retornar uma lista de TodoLists", async () => {
         const sut = new TodoListRepository();
-        const user = await makeUserDB();
+        //const user = await makeUserDB();
 
         const todolists = await makeTodoListsDB();
-        const result = await sut.getTodoLists(user.uid);
+        const result = await sut.getTodoLists(todolists[0].id_user);
 
         expect(result).toBeTruthy();
         expect(result.length).toBe(todolists.length);
