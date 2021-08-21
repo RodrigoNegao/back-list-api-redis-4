@@ -1,18 +1,18 @@
 import IORedis from "ioredis";
-import { TodoListEntity, UserEntity } from "../../../../src/core/infra";
-import { TodoList } from "../../../../src/features/todolist/domain/models";
+import { TodoListEntity, UserEntity } from "../../../../../src/core/infra";
+import { TodoList } from "../../../../../src/features/todolist/domain/models";
 import request from "supertest";
-import App from "../../../../src/core/presentation/app";
-import Database from "../../../../src/core/infra/data/connections/database";
+import App from "../../../../../src/core/presentation/app";
+import Database from "../../../../../src/core/infra/data/connections/database";
 import express, { Router } from "express";
-import TodoListRoutes from "../../../../src/features/todolist/presentation/routes";
+import TodoListRoutes from "../../../../../src/features/todolist/presentation/routes";
 import { v4 as uuid } from "uuid";
 
 jest.mock("ioredis");
 
 const makeUserDB = async (): Promise<UserEntity> => {
   return await UserEntity.create({
-    user: "any_user5",
+    user: "any_user546",
     password: "any_password",
   }).save();
 };
@@ -41,14 +41,12 @@ const makeTodoListsDB = async (): Promise<TodoListEntity[]> => {
   const user = await makeUserDB();
 
   const p1 = await TodoListEntity.create({
-    uid: "any_uid3",
     title: "any_title",
     detail: "any_detail",
     id_user: user.uid,
   }).save();
 
   const p2 = await TodoListEntity.create({
-    uid: "any_uid4",
     title: "any_title",
     detail: "any_detail",
     id_user: user.uid,
@@ -61,7 +59,6 @@ const makeTodoListDB = async (): Promise<TodoListEntity> => {
   const user = await makeUserDB();
 
   return await TodoListEntity.create({
-    uid: "any_uid3",
     title: "any_title",
     detail: "any_detail",
     id_user: user.uid,
@@ -82,7 +79,11 @@ describe("TodoList Routes", () => {
   beforeEach(async () => {
     await TodoListEntity.clear();
     await UserEntity.clear();
-    jest.resetAllMocks();
+    await jest.resetAllMocks();
+  });
+
+  afterAll(async () => {
+    await new Database().disconnectDatabase();
   });
   test("/GET messages", async () => {
     const user = await makeUserDB();

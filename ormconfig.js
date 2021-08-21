@@ -6,6 +6,7 @@ let config = {};
 
 if (process.env.NODE_ENV.toString() === "test") {
   config = {
+    name: "default",
     type: "sqlite",
     database: "./testdb.db",
     entities: ["src/core/infra/data/database/entities/**/*"],
@@ -17,19 +18,19 @@ if (process.env.NODE_ENV.toString() === "test") {
     url: process.env.DATABASE_URL,
     synchronize: false,
     logging: false,
-    schema: "lista1", //TODO fazer um if caso não exista
+    schema: "lista1",
     extra: {
       ssl: {
         rejectUnauthorized: false,
       },
     },
-    // TODO dist para produção
-    entities: ["src/core/infra/data/database/entities/**/*"],
-    migrations: ["src/core/infra/data/database/migrations/**/*"],
     cli: {
       entitiesDir: "src/core/infra/data/database/entities",
       migrationsDir: "src/core/infra/data/database/migrations",
     },
+    // Order , second
+    entities: ["dist/core/infra/data/database/entities/**/*"],
+    migrations: ["dist/core/infra/data/database/migrations/**/*"],
   };
 }
 

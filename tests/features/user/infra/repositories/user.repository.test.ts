@@ -1,4 +1,4 @@
-import { UserEntity } from "../../../../../src/core/infra";
+import { TodoListEntity, UserEntity } from "../../../../../src/core/infra";
 import Database from "../../../../../src/core/infra/data/connections/database";
 import { v4 as uuid } from "uuid";
 import { User } from "../../../../../src/features/user/domain/models";
@@ -48,7 +48,6 @@ describe("User Repository", () => {
   });
   beforeEach(async () => {
     await UserEntity.clear();
-    await UserEntity.clear();
   });
 
   afterAll(async () => {
@@ -62,6 +61,8 @@ describe("User Repository", () => {
 
       expect(result).toBeTruthy();
       expect(result.uid).toBeTruthy();
+      expect(result.user).toBe(params.user);
+      expect(result.password).toBe(params.password);
     });
 
     describe("getUsers", () => {

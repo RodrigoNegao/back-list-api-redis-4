@@ -1,4 +1,4 @@
-import { UserEntity } from "../../../../../src/core/infra";
+import { TodoListEntity, UserEntity } from "../../../../../src/core/infra";
 import { CacheRepository } from "../../../../../src/core/infra/repositories/cache.repository";
 import {
   DataNotFoundError,
@@ -39,16 +39,18 @@ const makeRequestShow = (): HttpRequest => ({
   body: {},
 });
 
-const makeUserDB = async (): Promise<UserEntity> =>
-  UserEntity.create({
-    user: "any_user",
-    password: "any_password",
-    uid: "any_id_user",
-  }).save();
+// const makeUserDB = async (): Promise<UserEntity> =>
+//   UserEntity.create({
+//     user: "any_user",
+//     password: "any_password",
+//     uid: "any_id_user",
+//   }).save();
 
 describe("TodoList Controller", () => {
-  beforeEach(() => {
-    jest.resetAllMocks();
+  beforeEach(async () => {
+    await TodoListEntity.clear();
+    await UserEntity.clear();
+    await jest.resetAllMocks();
   });
 
   // Testar o STORE do TodoList Controller

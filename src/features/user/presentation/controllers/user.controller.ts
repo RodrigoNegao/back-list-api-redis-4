@@ -56,6 +56,7 @@ export default class UserController implements MvcController {
       const cache = await this.#cache.get(`user:${user}`);
       if (cache) {
         return ok(Object.assign({}, cache, { cache: true }));
+        // or return ok({ ...cache, cache: true });
       }
       const result = await this.#repository.getUser(user, password);
 

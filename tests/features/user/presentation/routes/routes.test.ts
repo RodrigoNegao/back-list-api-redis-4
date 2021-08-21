@@ -1,18 +1,18 @@
 import IORedis from "ioredis";
-import { UserEntity } from "../../../../src/core/infra";
-import { User } from "../../../../src/features/user/domain/models";
+import { TodoListEntity, UserEntity } from "../../../../../src/core/infra";
+import { User } from "../../../../../src/features/user/domain/models";
 import request from "supertest";
-import App from "../../../../src/core/presentation/app";
-import Database from "../../../../src/core/infra/data/connections/database";
+import App from "../../../../../src/core/presentation/app";
+import Database from "../../../../../src/core/infra/data/connections/database";
 import express, { Router } from "express";
-import UserRoutes from "../../../../src/features/user/presentation/routes";
+import UserRoutes from "../../../../../src/features/user/presentation/routes";
 import { v4 as uuid } from "uuid";
 
 jest.mock("ioredis");
 
 const makeUserDB = async (): Promise<UserEntity> =>
   UserEntity.create({
-    user: "any_login",
+    user: "any_user",
     password: "any_password",
   }).save();
 
@@ -46,15 +46,6 @@ const makeUsersDB = async (): Promise<UserEntity[]> => {
   return [p1, p2];
 };
 
-// const makeUserDB = async (): Promise<UserEntity> => {
-//   const user = await makeUserDB();
-
-//   return await UserEntity.create({
-//     name: "any_name",
-//     userUid: user.uid,
-//   }).save();
-// };
-
 describe("User Routes", () => {
   const server = new App().server;
   beforeAll(async () => {
@@ -67,9 +58,13 @@ describe("User Routes", () => {
   });
 
   beforeEach(async () => {
+    await TodoListEntity.clear();
     await UserEntity.clear();
-    await UserEntity.clear();
-    jest.resetAllMocks();
+    await jest.resetAllMocks();
+  });
+
+  afterAll(async () => {
+    await new Database().disconnectDatabase();
   });
   // test("/GET users", async () => {
   //   const users = await makeUsersDB();
@@ -119,16 +114,16 @@ describe("User Routes", () => {
         .send({
           password: "any_password",
         })
-        .expect(400, { error: "Missing param: user" });
+        .expect(404, { error: "Missing param: user" });
     });
 
-    test("Deveria retornar 200", async () => {
+    test("Deveria retornar 200 Signin", async () => {
       const user = await makeUserDB();
       await request(server)
         .post("/signin")
         .send({
-          user: "any_user",
-          password: "any_password",
+          user: user.user,
+          password: user.password,
         })
         .expect(200)
         .expect((res) => {
@@ -139,19 +134,18 @@ describe("User Routes", () => {
     });
   });
 
-  describe("/GET signin/:uid", () => {
-    test("Deveria retornar um projeto para um ID válido", async () => {
+  describe("/POST login", () => {
+    test("Deveria retornar 200 Login", async () => {
       const user = await makeUserDB();
-
-      jest.spyOn(IORedis.prototype, "get").mockResolvedValue(null);
-
       await request(server)
-        .get(`/user/${user.uid}`)
-        .send()
+        .post("/login")
+        .send({
+          user: user.user,
+          password: user.password,
+        })
         .expect(200)
         .expect((res) => {
-          expect(res.body.uid).toBe(user.uid);
-          expect(res.body.cache).toBeFalsy();
+          expect(res.body.uid).toBeTruthy();
         });
     });
 

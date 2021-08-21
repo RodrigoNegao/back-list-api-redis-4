@@ -6,8 +6,7 @@ import { v4 as uuid } from "uuid";
 
 const makeUserDB = async (): Promise<UserEntity> =>
   UserEntity.create({
-    uid: "any_uid",
-    user: "any_user",
+    user: "any_user123",
     password: "any_password",
   }).save();
 
@@ -69,6 +68,7 @@ describe("TodoList Repository", () => {
   beforeEach(async () => {
     await TodoListEntity.clear();
     await UserEntity.clear();
+    jest.resetAllMocks();
   });
 
   afterAll(async () => {

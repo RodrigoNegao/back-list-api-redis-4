@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
@@ -28,11 +29,15 @@ export class TodoListEntity extends BaseEntity {
   @JoinColumn({ name: "id_user", referencedColumnName: "uid" })
   user?: UserEntity;
 
-  constructor(title: string, detail: string, id_user: string, uid?: string) {
+  constructor(title: string, detail: string, id_user: string) {
     super();
     this.title = title;
     this.detail = detail;
-    this.uid = uuid();
     this.id_user = id_user;
+  }
+
+  @BeforeInsert()
+  private beforeInsert() {
+    this.uid = uuid();
   }
 }

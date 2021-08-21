@@ -35,7 +35,11 @@ export default class UserRoutes {
       routerMvcAdapter(makeController(), EMvc.SHOW)
     );
 
-    routes.post("/signin", routerMvcAdapter(makeController(), EMvc.STORE));
+    routes.post(
+      "/signin",
+      middlewareAdapter(new UserMiddleware()),
+      routerMvcAdapter(makeController(), EMvc.STORE)
+    );
 
     return routes;
   }
