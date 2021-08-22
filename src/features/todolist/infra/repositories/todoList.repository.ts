@@ -48,7 +48,7 @@ export default class TodoListRepository {
   }
 
   async update(uid: string, params: TodoList): Promise<TodoList | undefined> {
-    const { title, detail } = params;
+    const { title, detail } = params; //TODO use id_user like filter too
 
     const todoList = await TodoListEntity.update(uid, {
       title,

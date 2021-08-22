@@ -4,6 +4,14 @@ let config = {};
 
 //process.env.NODE_ENV = null;
 
+var entities = ["dist/core/infra/data/database/entities/**/*"];
+var migrations = ["dist/core/infra/data/database/migrations/**/*"];
+
+if (process.env.NODE_ENV.toString() === "dev") {
+  entities = ["src/core/infra/data/database/entities/**/*"];
+  migrations = ["src/core/infra/data/database/migrations/**/*"];
+}
+
 if (process.env.NODE_ENV.toString() === "test") {
   config = {
     name: "default",
@@ -25,12 +33,12 @@ if (process.env.NODE_ENV.toString() === "test") {
       },
     },
     cli: {
-      entitiesDir: "src/core/infra/data/database/entities",
-      migrationsDir: "src/core/infra/data/database/migrations",
+      entitiesDir: "src/core/infra/data/database/entities/**/*",
+      migrationsDir: "src/core/infra/data/database/migrations/**/*",
     },
     // Order , second
-    entities: ["dist/core/infra/data/database/entities/**/*"],
-    migrations: ["dist/core/infra/data/database/migrations/**/*"],
+    entities: entities,
+    migrations: migrations,
   };
 }
 

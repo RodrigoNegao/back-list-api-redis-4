@@ -76,6 +76,19 @@ export default class UserController implements MvcController {
     }
   }
 
+  async store(request: HttpRequest): Promise<HttpResponse> {
+    try {
+      const result = await this.#repository.create(request.body);
+
+      await this.#cache.del("user:all");
+
+      return ok(result);
+    } catch (error) {
+      console.log(error);
+      return serverError();
+    }
+  }
+
   async delete(req: HttpRequest): Promise<HttpResponse> {
     const { uid } = req.params;
     try {
@@ -88,26 +101,15 @@ export default class UserController implements MvcController {
 
   async update(req: HttpRequest): Promise<HttpResponse> {
     const { uid } = req.params;
+    const { user } = req.body;
     try {
       const result = await this.#repository.update(uid, req.body);
 
       await this.#cache.del("user:all");
+      await this.#cache.del(`user:${user}`);
 
       return ok(result);
     } catch (error) {
-      return serverError();
-    }
-  }
-
-  async store(request: HttpRequest): Promise<HttpResponse> {
-    try {
-      const result = await this.#repository.create(request.body);
-
-      await this.#cache.del("user:all");
-
-      return ok(result);
-    } catch (error) {
-      console.log(error);
       return serverError();
     }
   }

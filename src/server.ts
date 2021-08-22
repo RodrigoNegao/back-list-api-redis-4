@@ -3,7 +3,7 @@ import Database from "./core/infra/data/connections/database";
 import { Redis } from "./core/infra/data/connections/redis";
 import App from "./core/presentation/app";
 
-Promise.all([new Database().openConnection(), new Redis().openConnection])
+Promise.all([new Database().openConnection(), new Redis().openConnection()])
   .then(() => {
     //console.log("Conectou");
     const app = new App();

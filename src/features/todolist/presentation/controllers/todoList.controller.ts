@@ -35,8 +35,8 @@ export default class TodoListController implements MvcController {
       // valido se existe cache
       if (cache) {
         return ok(
-          cache.map((lodoList: any) =>
-            Object.assign({}, lodoList, {
+          cache.map((todoList: any) =>
+            Object.assign({}, todoList, {
               cache: true,
             })
           )
@@ -103,20 +103,21 @@ export default class TodoListController implements MvcController {
 
   async update(request: HttpRequest): Promise<HttpResponse> {
     const { uid } = request.params;
-    const { id_user } = request.params;
+    //const { id_user } = request.params;
 
     //id_user_string
     //const id_user = parseInt(id_user_string);
     //const uid = parseInt(uid_string);
 
     try {
-      //problema se escreve o objeto
+      //TODO id_user
       const result = await this.#repository.update(uid, request.body);
 
       await this.#cache.del("todoList:all");
 
       return ok(result);
     } catch (error) {
+      console.log(error);
       return serverError();
     }
   }

@@ -37,6 +37,11 @@ export default class UserRoutes {
       routerMvcAdapter(makeController(), EMvc.STORE)
     );
 
+    // routes.delete(
+    //   "/signin/:uid",
+    //   routerMvcAdapter(makeController(), EMvc.DELETE)
+    // );
+
     return routes;
   }
 }

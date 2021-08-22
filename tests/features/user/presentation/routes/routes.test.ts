@@ -107,14 +107,13 @@ describe("User Routes", () => {
   // });
 
   describe("/POST /signin", () => {
-    test("Deveria retornar 400 ao tentar salvar um projeto sem user", async () => {
-      const user = await makeUserDB();
+    test("Deveria retornar 400 ao tentar salvar um usuario sem user", async () => {
       await request(server)
         .post("/signin")
         .send({
           password: "any_password",
         })
-        .expect(404, { error: "Missing param: user" });
+        .expect(400, { error: "Missing param: user" });
     });
 
     test("Deveria retornar 200 Signin", async () => {

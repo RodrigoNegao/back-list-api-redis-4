@@ -1,3 +1,4 @@
+import { DeleteResult } from "typeorm";
 import { TodoListEntity, UserEntity } from "../../../../../src/core/infra";
 import { CacheRepository } from "../../../../../src/core/infra/repositories/cache.repository";
 import {
@@ -44,6 +45,21 @@ const makeRequestShow = (): HttpRequest => ({
     password: "any_password",
   },
 });
+
+const makeRequestUpdate = (): HttpRequest => ({
+  body: {
+    user: "any_username",
+    password: "any_password",
+  },
+  params: { uid: "any_uid" },
+});
+
+// const makeDeleteResult = () => {
+//   return {
+//     raw: "any_raw",
+//     affected: 1 | 0,
+//   };
+// };
 
 describe("User Controller", () => {
   beforeEach(async () => {
@@ -234,4 +250,62 @@ describe("User Controller", () => {
       expect(getSpy).toHaveBeenLastCalledWith(`user:${makeUserResult().user}`);
     });
   });
+
+  describe("Update", () => {
+    test("Deveria retornar erro 500", async () => {
+      jest
+        .spyOn(CacheRepository.prototype, "del")
+        .mockRejectedValue(new Error());
+
+      const sut = makeSut();
+      const result = await sut.update(makeRequestUpdate());
+      expect(result).toEqual(serverError());
+    });
+
+    test("Deveria editar um usuario e retornar com status 200", async () => {
+      const delSpy = jest
+        .spyOn(CacheRepository.prototype, "del")
+        .mockResolvedValue(true);
+
+      jest
+        .spyOn(UserRepository.prototype, "update")
+        .mockResolvedValue(makeUserResult());
+
+      const sut = makeSut();
+      const result = await sut.update(makeRequestUpdate());
+
+      expect(result).toStrictEqual(ok(makeUserResult()));
+      expect(delSpy).toHaveBeenCalledWith("user:all");
+      expect(delSpy).toHaveBeenCalledWith(`user:${makeUserResult().uid}`);
+    });
+  });
+
+  // describe("Delete", () => {
+  //   test("Deveria retornar erro 500", async () => {
+  //     jest
+  //       .spyOn(CacheRepository.prototype, "del")
+  //       .mockRejectedValue(new Error());
+
+  //     const sut = makeSut();
+  //     const result = await sut.delete(makeRequestShow());
+  //     expect(result).toEqual(serverError());
+  //   });
+
+  //   test("Deveria excluir um usuario e retornar com stastus 200", async () => {
+  //     const delSpy = jest
+  //       .spyOn(CacheRepository.prototype, "del")
+  //       .mockResolvedValue(true);
+
+  //     jest
+  //       .spyOn(UserRepository.prototype, "delete")
+  //       .mockResolvedValue(makeDeleteResult());
+
+  //     const sut = makeSut();
+  //     const result = await sut.delete(makeRequestShow());
+
+  //     expect(result).toStrictEqual(ok(makeDeleteResult()));
+  //     expect(delSpy).toHaveBeenCalledWith("users:all");
+  //     expect(delSpy).toHaveBeenCalledWith(`user:${makeUserResult().uid}`);
+  //   });
+  // });
 });

@@ -176,28 +176,6 @@ describe("TodoList Routes", () => {
     });
   });
 
-  describe("/GET message/:uid", () => {
-    test("Deveria reotornar um ToDo para um ID válido", async () => {
-      const todolist = await makeTodoListDB();
-
-      jest.spyOn(IORedis.prototype, "get").mockResolvedValue(null);
-
-      await request(server)
-        .get(`/message/${todolist.uid}`)
-        .send()
-        .expect(200)
-        .expect((res) => {
-          expect(res.body.uid).toBe(todolist.uid);
-          expect(res.body.cache).toBeFalsy();
-        });
-    });
-
-    test("Deve retornar 404 quando o projeto não existir", async () => {
-      jest.spyOn(IORedis.prototype, "get").mockResolvedValue(null);
-      await request(server).get(`/message/${uuid()}`).send().expect(404);
-    });
-  });
-
   describe("PUT /message/:uid", () => {
     test("Deveria alterar um ToDo", async () => {
       const user = await makeUserDB();
@@ -208,15 +186,14 @@ describe("TodoList Routes", () => {
       await request(server)
         .put(`/message/${todolist.uid}`)
         .send({
-          title: "any_title",
-          detail: "any_detail",
-          id_user: user.uid,
+          title: "any_title_update",
+          detail: "any_detail_update",
+          //id_user: user.uid,
         })
         .expect(200)
         .expect((res) => {
-          expect(res.body.title).toBe("any_title");
-          expect(res.body.detail).toBe("any_detail");
-          expect(res.body.id_user).toBe(user.uid);
+          expect(res.body.title).toBe("any_title_update");
+          expect(res.body.detail).toBe("any_detail_update");
         });
     });
 
@@ -247,23 +224,9 @@ describe("TodoList Routes", () => {
         })
         .expect(400, { error: "Missing param: detail" });
     });
-
-    test("Deveria retornar status 400 ao tentrar salvar um usuario sem useruid", async () => {
-      const user = await makeUserDB();
-      const todolist = await makeTodoListDB();
-
-      await request(server)
-        .put(`/message/${todolist.uid}`)
-        .send({
-          uid: "any_uid",
-          title: "any_title",
-          detail: "any_detail",
-        })
-        .expect(400, { error: "Missing param: id_user" });
-    });
   });
 
-  describe("DELETE", () => {
+  describe("DELETE /message/:uid", () => {
     test("Deveria excluir um ToDo", async () => {
       const todolist = await makeTodoListDB();
 
