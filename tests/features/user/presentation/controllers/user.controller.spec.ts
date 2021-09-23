@@ -238,13 +238,13 @@ describe("User Controller", () => {
     test("05 Deveria retornar 200 se o user CACHE existir", async () => {
       const getSpy = jest
         .spyOn(CacheRepository.prototype, "get")
-        .mockResolvedValue(makeUserResult().user);
+        .mockResolvedValue(makeUserResult());
 
       const sut = makeSut();
       const result = await sut.show(makeRequestShow());
 
       expect(result).toEqual(
-        ok(Object.assign({}, makeUserResult().uid, { cache: true }))
+        ok(Object.assign({}, makeUserResult(), { cache: true }))
       );
 
       expect(getSpy).toHaveBeenLastCalledWith(`user:${makeUserResult().user}`);
