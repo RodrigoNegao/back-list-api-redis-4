@@ -8,6 +8,6 @@ Promise.all([new Database().openConnection(), new Redis().openConnection()])
     //console.log("Conectou");
     const app = new App();
     app.init();
-    app.start(8080);
+    app.start(Number(process.env.PORT) || 8080);
   })
   .catch(console.error);
