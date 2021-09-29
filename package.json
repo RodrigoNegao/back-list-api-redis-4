@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=dev ts-node-dev --respawn --transpile-only src/server.ts",
     "dev:debug": "cross-env NODE_ENV=dev ts-node-dev --inspect --respawn --transpile-only src/server.ts",
-    "build": "tsc",
     "migration:show": "ts-node --transpile-only node_modules/typeorm/cli.js migration:show",
     "migration:run": "ts-node --transpile-only node_modules/typeorm/cli.js migration:run",
     "migration:revert": "ts-node --transpile-only node_modules/typeorm/cli.js migration:revert",
@@ -17,6 +16,7 @@
     "test:integration": "yarn test --watchAll -c jest-integration.config.js",
     "migration:run:test": "cross-env NODE_ENV=test yarn ts-node-dev ./node_modules/typeorm/cli.js migration:run",
     "test:coverage": "yarn test --coverage",
+    "build": "tsc",
     "start": "node ./dist/server.js"
   },
   "dependencies": {
