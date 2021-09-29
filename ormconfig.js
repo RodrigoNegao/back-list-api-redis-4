@@ -6,10 +6,14 @@ let config = {};
 
 var entities = ["dist/core/infra/data/database/entities/**/*"];
 var migrations = ["dist/core/infra/data/database/migrations/**/*"];
+var entitiesDir = "dist/core/infra/data/database/entities/**/*";
+var migrationsDir = "dist/core/infra/data/database/migrations/**/*";
 
 if (process.env.NODE_ENV.toString() === "dev") {
   entities = ["src/core/infra/data/database/entities/**/*"];
   migrations = ["src/core/infra/data/database/migrations/**/*"];
+  entitiesDir = "src/core/infra/data/database/entities/**/*";
+  migrationsDir = "src/core/infra/data/database/migrations/**/*";
 }
 
 if (process.env.NODE_ENV.toString() === "test") {
@@ -33,8 +37,8 @@ if (process.env.NODE_ENV.toString() === "test") {
       },
     },
     cli: {
-      entitiesDir: "src/core/infra/data/database/entities/**/*",
-      migrationsDir: "src/core/infra/data/database/migrations/**/*",
+      entitiesDir: entitiesDir,
+      migrationsDir: migrationsDir,
     },
     // Order , second
     entities: entities,
