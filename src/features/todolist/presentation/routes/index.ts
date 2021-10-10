@@ -24,6 +24,11 @@ export default class TodoListRoutes {
       "/messages/:id_user",
       routerMvcAdapter(makeController(), EMvc.INDEX)
     );
+    routes.get(
+      "/message/:uid",
+      middlewareAdapter(new UidMiddleware()),
+      routerMvcAdapter(makeController(), EMvc.SHOW)
+    );
     routes.post(
       "/message",
       middlewareAdapter(new UidMiddleware()),
