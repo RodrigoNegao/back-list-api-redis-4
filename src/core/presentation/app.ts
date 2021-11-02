@@ -3,6 +3,8 @@ import express, { Request, Response, Router } from "express";
 import TodoListRoutes from "../../features/todolist/presentation/routes";
 import UserRoutes from "../../features/user/presentation/routes";
 
+import setupSwagger from "../../config-swagger";
+
 export default class App {
   readonly #express: express.Application;
 
@@ -30,6 +32,8 @@ export default class App {
 
     this.#express.get("/", (_: Request, res: Response) => res.redirect("/api"));
     this.#express.use("/api", router);
+
+    setupSwagger(this.#express);
 
     router.get("/", (_: Request, res: Response) => res.send("API RUNNING..."));
 

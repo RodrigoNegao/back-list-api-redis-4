@@ -1,8 +1,9 @@
-## BackEnd Node
+## BackEnd Model TypeScript Node (Boilerplate)
 
-- Arquitetura
-- Redis
-- Postgree
-- TypeScript
-- TypeORM
-- Jest (Não finalizado)
+- Software Architect;
+- Redis;
+- PostgreeSQL;
+- TypeScript;
+- TypeORM;
+- SWAGGER ex:localhost:8080/docs ;
+- Jest;
