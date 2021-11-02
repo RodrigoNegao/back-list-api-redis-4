@@ -2,18 +2,22 @@ import { postLoginPath, postSigninPath } from "./docs/users.path";
 
 import { userSchema } from "./schemas/user.schema";
 import { loginSchema } from "./schemas/login.schema";
-import { errorSchema } from "./schemas/error.schema";
+import { msgSchema } from "./schemas/msg.schema";
+import { uidSchema } from "./schemas/uid.schema";
 
 export default {
   openapi: "3.0.0",
   info: {
-    title: "TodoList Model",
+    title: "Boilerplate TodoList Model",
     description: "API Model PostgreSQL e Redis",
     version: "0.9.0",
   },
   servers: [
     {
       url: "/api",
+    },
+    {
+      url: "https://backapi4.herokuapp.com/api",
     },
   ],
   paths: {
@@ -23,7 +27,8 @@ export default {
   schemas: {
     user: userSchema,
     login: loginSchema,
-    error: errorSchema,
+    uid: uidSchema,
+    msg: msgSchema,
   },
   /*
   components: {

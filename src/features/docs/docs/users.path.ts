@@ -23,7 +23,17 @@ export const postLoginPath = {
         content: {
           "application/json": {
             schema: {
-              $ref: "#/schemas/user",
+              $ref: "#/schemas/uid",
+            },
+          },
+        },
+      },
+      400: {
+        description: "Bad Resquest",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/schemas/msg",
             },
           },
         },
@@ -33,7 +43,7 @@ export const postLoginPath = {
         content: {
           "application/json": {
             schema: {
-              $ref: "#/schemas/error",
+              $ref: "#/schemas/msg",
             },
           },
         },
@@ -45,31 +55,49 @@ export const postLoginPath = {
 export const postSigninPath = {
   post: {
     tags: ["User"],
-    summary: "API para gerenciar usuário",
+    summary: "Signin",
     security: [
       {
         ApiKeyAuth: [],
       },
     ],
-    parameters: [
-      {
-        name: "id",
-        in: "path",
-        description: "UID do usuário",
-        required: true,
-        schema: {
-          type: "string",
-          format: "uuid",
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/schemas/login",
+          },
         },
       },
-    ],
+    },
+    parameters: [],
     responses: {
       200: {
         description: "Success",
         content: {
           "application/json": {
             schema: {
-              $ref: "#/schemas/user",
+              $ref: "#/schemas/msg",
+            },
+          },
+        },
+      },
+      400: {
+        description: "Bad Request",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/schemas/msg",
+            },
+          },
+        },
+      },
+      500: {
+        description: "Error",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/schemas/msg",
             },
           },
         },

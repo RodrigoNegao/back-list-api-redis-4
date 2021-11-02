@@ -1,9 +1,8 @@
-export const errorSchema = {
+export const msgSchema = {
   type: "object",
   properties: {
     msg: {
       type: "string",
-      example: "Internal Error",
     },
   },
 };
