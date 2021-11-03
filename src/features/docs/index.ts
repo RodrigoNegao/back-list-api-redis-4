@@ -1,4 +1,5 @@
 import { postLoginPath, postSigninPath } from "./docs/users.path";
+import { getTodoListPath } from "./docs/todoList.path";
 
 import { userSchema } from "./schemas/user.schema";
 import { loginSchema } from "./schemas/login.schema";
@@ -23,6 +24,7 @@ export default {
   paths: {
     "/login": postLoginPath,
     "/signin": postSigninPath,
+    "/messages/{id}": getTodoListPath,
   },
   schemas: {
     user: userSchema,
