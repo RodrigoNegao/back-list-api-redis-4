@@ -34,6 +34,11 @@ export default {
   },
   /*
   components: {
+    schemas: {
+      user: userSchema,
+    },
+  },
+  components: {
     badRequest: badRequestComponent,
     serverError: serverErrorComponent,
     notFound: notFoundComponent,

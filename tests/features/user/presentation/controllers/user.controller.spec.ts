@@ -276,7 +276,7 @@ describe("User Controller", () => {
 
       expect(result).toStrictEqual(ok(makeUserResult()));
       expect(delSpy).toHaveBeenCalledWith("user:all");
-      expect(delSpy).toHaveBeenCalledWith(`user:${makeUserResult().uid}`);
+      expect(delSpy).toHaveBeenCalledWith("user:any_username");
     });
   });
 

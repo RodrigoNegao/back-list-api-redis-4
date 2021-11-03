@@ -7,5 +7,5 @@
 - PostgreeSQL;
 - TypeScript;
 - TypeORM;
-- SWAGGER ex:localhost:8080/docs ;
+- SWAGGER(Em Andamento) ex:localhost:8080/docs ;
 - Jest;

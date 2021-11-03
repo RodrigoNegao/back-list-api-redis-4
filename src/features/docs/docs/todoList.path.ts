@@ -20,7 +20,7 @@ export const getTodoListPath = {
         },
       },
       400: {
-        description: "Bad Resquest",
+        description: "Bad Request",
         content: {
           "application/json": {
             schema: {

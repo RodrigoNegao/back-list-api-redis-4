@@ -29,7 +29,7 @@ export const postLoginPath = {
         },
       },
       400: {
-        description: "Bad Resquest",
+        description: "Bad Request",
         content: {
           "application/json": {
             schema: {
@@ -55,7 +55,7 @@ export const postLoginPath = {
 export const postSigninPath = {
   post: {
     tags: ["User"],
-    summary: "Signin",
+    summary: "SignIn",
     security: [
       {
         ApiKeyAuth: [],
