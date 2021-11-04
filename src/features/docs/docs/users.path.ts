@@ -2,11 +2,11 @@ export const postLoginPath = {
   post: {
     tags: ["User"],
     summary: "Login",
-    security: [
-      {
-        ApiKeyAuth: [],
-      },
-    ],
+    // security: [
+    //   {
+    //     ApiKeyAuth: [],
+    //   },
+    // ],
     requestBody: {
       content: {
         "application/json": {
@@ -56,11 +56,11 @@ export const postSigninPath = {
   post: {
     tags: ["User"],
     summary: "SignIn",
-    security: [
-      {
-        ApiKeyAuth: [],
-      },
-    ],
+    // security: [
+    //   {
+    //     ApiKeyAuth: [],
+    //   },
+    // ],
     requestBody: {
       content: {
         "application/json": {
