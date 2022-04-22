@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { TodoListEntity } from "../../../../core/infra";
-import { CacheRepository } from "../../../../core/infra/repositories/cache.repository";
+import { Request, Response } from 'express';
+import { TodoListEntity } from '../../../../core/infra';
+import { CacheRepository } from '../../../../core/infra/repositories/cache.repository';
 import {
   DataNotFoundError,
   HttpRequest,
@@ -9,8 +9,8 @@ import {
   notFound,
   ok,
   serverError,
-} from "../../../../core/presentation";
-import TodoListRepository from "../../infra/repositories/todoList.repository";
+} from '../../../../core/presentation';
+import TodoListRepository from '../../infra/repositories/todoList.repository';
 
 //Tips Find - https://orkhan.gitbook.io/typeorm/docs/find-options
 
@@ -26,11 +26,7 @@ export default class TodoListController implements MvcController {
   public async index(request: HttpRequest) {
     const { id_user } = request.params;
     try {
-      const cache = await this.#cache.get("todoList:all");
-
-      //console.log("string>>>", id_user_string);
-      //const id_user = parseInt(id_user_string);
-      // console.log("number>>>", id_user);
+      const cache = await this.#cache.get('todoList:all');
 
       // valido se existe cache
       if (cache) {
@@ -45,11 +41,11 @@ export default class TodoListController implements MvcController {
 
       const todoLists = await this.#repository.getTodoLists(id_user);
 
-      await this.#cache.set("todoList:all", todoLists);
+      await this.#cache.set('todoList:all', todoLists);
 
       return ok(todoLists);
     } catch (error) {
-      console.log(error);
+      console.debug(error);
       return serverError();
     }
   }
@@ -93,7 +89,7 @@ export default class TodoListController implements MvcController {
     //id_user
     try {
       await this.#cache.del(`todoList:${uid}`);
-      await this.#cache.del("todoList:all");
+      await this.#cache.del('todoList:all');
       const result = await this.#repository.delete(uid);
       return ok(result);
     } catch (error) {
@@ -113,7 +109,7 @@ export default class TodoListController implements MvcController {
       //TODO id_user
       const result = await this.#repository.update(uid, request.body);
 
-      await this.#cache.del("todoList:all");
+      await this.#cache.del('todoList:all');
 
       return ok(result);
     } catch (error) {
@@ -126,7 +122,7 @@ export default class TodoListController implements MvcController {
     try {
       const result = await this.#repository.create(request.body);
 
-      await this.#cache.del("todoList:all");
+      await this.#cache.del('todoList:all');
 
       return ok(result);
     } catch (error) {
